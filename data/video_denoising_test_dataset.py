@@ -89,7 +89,7 @@ class Real_static(data.Dataset):
     def __getitem__(self, index):  ## The index indicates the frame index which is flattened
         # path_LQ = self.data_info['path_LQ'][index]
         # path_GT = self.data_info['path_GT'][index]
-        GT_size = 384   # original = 512
+        GT_size = 384   # original = 512 
         folder_path = self.subfolders_GT[index]
         img_paths = sorted(glob.glob(folder_path+'/0*mat'))[0:self.opt['N_frames']]
         gt_path = folder_path+'/gt.mat'

@@ -4,8 +4,8 @@ use_tb_logger: true
 model: video_base
 # scale: 4 # GS: without scale for denoising
 # gpu_ids: [0,1,2,3,4,5,6,7]
-gpu_ids: [0,1,2,3]
-#gpu_ids: [0]
+#gpu_ids: [0,1,2,3]
+gpu_ids: [0,1,2]
 is_test_gt: True
 is_multi_out: True
 #### datasets
@@ -28,7 +28,7 @@ datasets:
     N_frames: 3
     use_shuffle: True
     n_workers: 4  # per GPU
-    batch_size: 2
+    batch_size: 2 # old 2
     GT_size: 256 # GS: change training dataset to 128
     use_flip: True
     use_rot: True

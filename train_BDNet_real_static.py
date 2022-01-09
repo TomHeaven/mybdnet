@@ -270,11 +270,12 @@ def main():
                         ssim_rlt[folder] = ssim
 
                 #pbar.update('Test {}_psnr={}'.format(folder,psnr))
-            if is_test_gt == True:
+            if is_test_gt == True and len(psnr_rlt) > 0 and len(ssim_rlt) > 0:
                 for k, v in psnr_rlt.items():
                     psnr_total_avg += v
                 for k, v in ssim_rlt.items():
                     ssim_total_avg += v
+                
                 psnr_total_avg /= len(psnr_rlt)
                 ssim_total_avg /= len(ssim_rlt)
                 if opt['use_tb_logger'] and 'debug' not in opt['name']:

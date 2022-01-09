@@ -16,7 +16,7 @@ datasets:
     mode: Real_static #video_denoising_test_finetune #video_denoising_test_SIDD
     dataroot_GT: ../datasets/Real_static 
     cache_data: True
-    N_frames: 3
+    N_frames: 5
     noise_in: True
     padding: new_info
     noise_level: 
@@ -27,7 +27,7 @@ datasets:
 network_G:
   which_model_G: BDNet
   nf: 64
-  nframes: 3
+  nframes: 5
   groups: 8
   front_RBs: 2
   back_RBs: 5

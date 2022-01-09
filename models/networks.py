@@ -9,7 +9,7 @@ def define_G(opt):
     # image restoration
 
     if which_model == 'BDNet':
-        print('opt_net[\'nframes\']', opt_net['nframes'])
+        #print('opt_net[\'nframes\']', opt_net['nframes'])
         netG = BDNet.BDNet_train(nf=opt_net['nf'], nframes=opt_net['nframes'],
                               groups=opt_net['groups'], front_RBs=opt_net['front_RBs'],
                               back_RBs=opt_net['back_RBs'], center=opt_net['center'])
