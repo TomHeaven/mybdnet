@@ -10,7 +10,7 @@ try:
 except ImportError:
     raise ImportError('Failed to import DCNv2 module.')
             
-DEBUG = False
+DEBUG = True
     
 class Predenoise_Pyramid(nn.Module):
     def __init__(self, nf=64,num_in=4,num_out=64,out_act='lrelu'):
@@ -18,7 +18,8 @@ class Predenoise_Pyramid(nn.Module):
         HR_in: True if the inputs are high spatial size
         '''
         super(Predenoise_Pyramid, self).__init__()
-        
+        if DEBUG:
+            print('Predenoise_Pyramid num_in', num_in, 'nf', nf)
         self.conv_first = nn.Conv2d(num_in, nf, 3, 1, 1, bias=True)
         basic_block = functools.partial(arch_util.ConvBlock_noBN, nf=nf)
         self.dn_L10_conv = basic_block()
@@ -39,6 +40,8 @@ class Predenoise_Pyramid(nn.Module):
         self.out_act = out_act
 
     def forward(self, x):
+        if DEBUG:
+            print('Predenoise_Pyramid forward: x', x.shape)
         L1_fea = self.lrelu(self.conv_first(x))
         L1_fea = self.lrelu(self.dn_L10_conv(L1_fea))
         L1_fea = self.lrelu(self.dn_L11_conv(L1_fea))

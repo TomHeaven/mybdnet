@@ -41,6 +41,8 @@ def create_dataset(dataset_opt):
     elif mode == 'Real_dynamic':
         from data.video_denoising_test_dataset import Real_dynamic as D
         # pdb.set_trace()
+    elif mode == 'My_real':
+        from data.video_denoising_test_dataset import My_real as D
     else:
         raise NotImplementedError('Dataset [{:s}] is not recognized.'.format(mode))
         

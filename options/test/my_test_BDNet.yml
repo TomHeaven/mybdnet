@@ -9,25 +9,24 @@ is_test_gt: True
 is_multi_out: True
 #### datasets
 datasets:
-
   val:
     pre_demosaic: False
-    name: vimeo
-    mode: Real_static #video_denoising_test_finetune #video_denoising_test_SIDD
-    dataroot_GT: ../datasets/Real_static 
+    name: hdr+
+    mode: My_real #video_denoising_test_finetune #video_denoising_test_SIDD
+    dataroot_GT: ../../mf_demosaicking_denoising/data_real/hdr+_crop_sigma5
     cache_data: True
-    N_frames: 5
+    N_frames: 3
     noise_in: True
     padding: new_info
     noise_level: 
     noise_type: Poisson_Gaussian
-    sigma: 15
+    sigma: 5
 
 #### network structures
 network_G:
   which_model_G: BDNet
   nf: 64
-  nframes: 5
+  nframes: 3
   groups: 8
   front_RBs: 2
   back_RBs: 5

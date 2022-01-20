@@ -14,31 +14,14 @@ from models import create_model
 import cv2
 import numpy as np
 
-def nor(x):
-    y = (x-x.min())/(x.max()-x.min())
-    return y
-    
-def init_dist(backend='nccl', **kwargs):
-    """initialization for distributed training"""
-    if mp.get_start_method(allow_none=True) != 'spawn':
-        mp.set_start_method('spawn')
-    rank = int(os.environ['RANK'])
-    num_gpus = torch.cuda.device_count()
-    torch.cuda.set_device(rank % num_gpus)
-    dist.init_process_group(backend=backend, **kwargs)
-
-
 def main():
-
     #### options
-    opt = 'options/test/test_BDNet.yml'
+    opt = 'options/test/my_test_BDNet.yml'
     opt = option.parse(opt, is_train=True)
     log_dir = '../tb_logger/test_' + opt['name']
     #### distributed training settings
     opt['dist'] = False
     print('Disabled distributed training.')
-
-
 
     # convert to NoneDict, which returns None for missing keys
     opt = option.dict_to_nonedict(opt)
@@ -62,24 +45,17 @@ def main():
     #### create model
     model = create_model(opt)
 
-
-
-
-    
-        
     psnr_rlt = {}  # with border and center frames
     psnr_total_avg = 0.
     ssim_rlt = {}  # with border and center frames
     ssim_total_avg = 0.
-    save_path = "%s/Real_static"%(log_dir)
+    save_path = "%s/MyReal"%(log_dir)
     if not os.path.isdir(save_path):
         os.makedirs(save_path)
     is_test_gt = opt['is_test_gt']
     
     #if epoch % 10 == 0:
     for idx, val_data in enumerate(val_loader):
-        
-            
         folder = val_data['folder'][0]
         model.feed_data(val_data,need_GT=is_test_gt)
         model.test(flag='real')
