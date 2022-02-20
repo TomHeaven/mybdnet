@@ -41,6 +41,7 @@ class Predenoise_Pyramid(nn.Module):
 
     def forward(self, x):
         if DEBUG:
+            # torch.Size([3, 5, 168, 226])
             print('Predenoise_Pyramid forward: x', x.shape)
         L1_fea = self.lrelu(self.conv_first(x))
         L1_fea = self.lrelu(self.dn_L10_conv(L1_fea))
@@ -55,7 +56,8 @@ class Predenoise_Pyramid(nn.Module):
         L3_fea = self.lrelu(self.dn_L31_conv(L3_fea))        
         L2_fea_up = F.interpolate(L3_fea, scale_factor=2, mode='bilinear',
                                align_corners=False)
-        
+        if DEBUG:
+            print('L2_fea_up', L2_fea_up.shape, 'L2_fea', L2_fea.shape)
         L2_fea_up = torch.cat([L2_fea_up, L2_fea], dim=1)
         L2_fea_up = self.lrelu(self.dn_L20_conv_up(L2_fea_up)) 
         L2_fea_up = self.lrelu(self.dn_L21_conv_up(L2_fea_up))   
@@ -219,7 +221,7 @@ class BDNet_train(nn.Module):
     def forward(self, x,noise,flag='syn'):
         B, N, C, H, W = x.size()  # N video frames
         if DEBUG:
-            print('x', x.size())
+            print('BDNet_train foward x', x.size())
         #x_center = x[:, self.center, :, :, :].contiguous()
         # L1
         if self.is_noise == True:
@@ -237,6 +239,8 @@ class BDNet_train(nn.Module):
             L1_fea_ref = L1_fea_ref[:,self.center,:,:,:]
             pre_out = F.pixel_shuffle(self.PreP_out(L1_fea_ref),2)
         else:
+            if DEBUG:
+                print('BDNet_train foward input', input.size())
             L1_fea = self.pre_dn_real(input)
             L1_fea_ref = L1_fea.reshape(B,N,self.nf, H, W)
             L1_fea_ref = L1_fea_ref[:,self.center,:,:,:]

@@ -139,6 +139,42 @@ class Real_static(data.Dataset):
     def __len__(self):
         return len(self.subfolders_GT)
 
+def bayer2bayer3d(image, inBayerType='rggb'):
+        """
+        convert bayer image to specified bayer 3D type
+        :param image: input RGB image
+        :param inBayerType: input Bayer image
+        :return: 3D Bayer image [H x W x C], where C is channel for 'rggb'
+        """
+
+        assert(image.ndim == 2)
+        assert(len(inBayerType) == 4)
+
+        height, width = image.shape[:2]
+        image = image[:height-height%4, :width-width%4]
+        out = np.zeros((image.shape[0]//2, image.shape[1]//2, 4), dtype=image.dtype)
+
+        if DEBUG:
+            print('out.shape = ', out.shape)
+
+        c = np.zeros(4, dtype=np.uint8)
+        g = 1
+        for i in range(4):
+            if inBayerType[i] == 'R' or inBayerType[i] == 'r':
+                c[0] = i
+            elif inBayerType[i] == 'G' or inBayerType[i] == 'g':
+                c[g] = i
+                g += 1
+            elif inBayerType[i] == 'B' or inBayerType[i] == 'b':
+                c[3] = i
+
+        out[:, :, c[0]] = image[::2,::2]
+        out[:, :, c[1]] = image[::2, 1::2]
+        out[:, :, c[2]] = image[1::2, ::2]
+        out[:, :, c[3]] = image[1::2, 1::2]
+        return out
+
+
 class My_real(data.Dataset):
     def __init__(self, opt):
         super(My_real, self).__init__()
@@ -152,6 +188,13 @@ class My_real(data.Dataset):
         
         # subfolders_LQ = util.glob_file_list(self.LQ_root)
         self.subfolders_GT = sorted(glob.glob(self.GT_root+'/*'))
+    
+    def fix_bayer_size(self, bayer):
+        h, w = bayer.shape
+        new_h = h - h%8
+        new_w = w - w%8
+        bayer = bayer[:new_h,:new_w]
+        return bayer
         
     def __getitem__(self, index):  ## The index indicates the frame index which is flattened
         #GT_size = 384
@@ -163,7 +206,13 @@ class My_real(data.Dataset):
         for img_path in img_paths:
             if DEBUG:
                 print('img_path', img_path)
-            rggb = cv2.imread(img_path)
+            bayer = cv2.imread(img_path, cv2.IMREAD_UNCHANGED) / 255.0
+            if DEBUG:
+                print('bayer', bayer.shape)
+            bayer = self.fix_bayer_size(bayer)
+            if DEBUG:
+                print('fixed bayer', bayer.shape)
+            rggb = bayer2bayer3d(bayer, 'grbg')
             noise = np.ones(rggb.shape[:2]) * sigma
             noise_l.append(noise)
             if self.opt['pre_demosaic'] == True:
