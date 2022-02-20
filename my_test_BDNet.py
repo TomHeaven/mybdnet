@@ -14,6 +14,8 @@ from models import create_model
 import cv2
 import numpy as np
 
+DEBUG = True
+
 def main():
     #### options
     opt = 'options/test/my_test_BDNet.yml'
@@ -64,10 +66,17 @@ def main():
         lq_img = datautil.demosaic(lq_img)
         rlt_img = util.tensor2img(visuals['rlt'],out_type=np.float32)  # uint8
         gt_img = util.tensor2img(visuals['GT'],out_type=np.float32) if is_test_gt == True else None # uint8
+
+        if DEBUG:
+            if is_test_gt:
+                print('lq_img', lq_img.shape, 'rlt_img', rlt_img.shape, 'gt_img', gt_img.shape)
+            else:
+                print('lq_img', lq_img.shape, 'rlt_img', rlt_img.shape)
         
-        out_img = np.concatenate([lq_img,rlt_img,gt_img],1) if is_test_gt == True else np.concatenate([lq_img,rlt_img],1) # uint8
-        wb = val_data['wb'][0].unsqueeze(0).numpy()
-        out_img = out_img*wb
+        #out_img = np.concatenate([lq_img,rlt_img,gt_img],1) if is_test_gt == True else np.concatenate([lq_img,rlt_img],1) # uint8
+        out_img = rlt_img
+        #wb = val_data['wb'][0].unsqueeze(0).numpy()
+        #out_img = out_img*wb
         out_img = (np.clip(out_img,0.0,1.0-1e-4)+1e-4)**(1.0/2.2)
         out_img = np.uint8(out_img*255.0)
         
