@@ -21,6 +21,7 @@ def parse(opt_path, is_train=True):
 
     # datasets
     for phase, dataset in opt['datasets'].items():
+        #print('phase', phase, 'dataset', dataset)
         phase = phase.split('_')[0]
         dataset['phase'] = phase
         # GS: No need scale

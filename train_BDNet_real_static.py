@@ -30,7 +30,7 @@ def init_dist(backend='nccl', **kwargs):
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Process some integers.')
+    parser = argparse.ArgumentParser(description='Process Arguments.')
     parser.add_argument('--opt_file', type=str, default='options/train/train_BDNet.yml', 
                     help='path for option file')
     args = parser.parse_args()
