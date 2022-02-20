@@ -102,10 +102,14 @@ class Real_static(data.Dataset):
             if self.opt['pre_demosaic'] == True:
                 rggb = util.demosaic(rggb)
             rggb_l.append(rggb)
+            if DEBUG:
+                print('img_path', img_path, 'rggb', rggb.shape)
             
         wb = 1.0/wb 
         rggb_case = np.stack(rggb_l,0)    
         rggb_in = np.transpose(rggb_case,(0,3,1,2)) # N,C,H,W
+        if DEBUG:
+            print('rggb_in 0', len(rggb_l), rggb_in.shape)
         
         gt_data = scio.loadmat(gt_path)
         gt = gt_data['gt']
@@ -128,6 +132,10 @@ class Real_static(data.Dataset):
             noise_in_unpro_r = np.stack([noise[1],noise[3],noise[5]],0).reshape(1,3,1,1)
         noise_in_unpro = rggb_in*noise_in_unpro_s + noise_in_unpro_r
         gt = gt[:,0:GT_size*2,0:GT_size*2]
+
+        if DEBUG:
+            print('noise', noise.shape, 'noise_l', noise_l[0].shape, 'rggb_in', rggb_in.shape)
+            print('noise_map', noise_map.shape)
          
         img_LQs = torch.from_numpy(np.ascontiguousarray(rggb_in)).float()
         noise_in = torch.from_numpy(np.ascontiguousarray(noise_map)).float()
