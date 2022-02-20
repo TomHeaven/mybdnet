@@ -14,7 +14,7 @@ from models import create_model
 import cv2
 import numpy as np
 
-DEBUG = True
+DEBUG = False
 
 def main():
     #### options

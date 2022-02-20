@@ -8,7 +8,7 @@ import cv2
 import lmdb,glob
 import scipy.io as scio
 
-DEBUG = True
+DEBUG = False
 
 class Real_dynamic(data.Dataset):
 
