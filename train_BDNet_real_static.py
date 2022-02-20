@@ -13,6 +13,7 @@ from data import create_dataloader, create_dataset
 from models import create_model
 import cv2
 import numpy as np
+import argparse
 
 def nor(x):
     y = (x-x.min())/(x.max()-x.min())
@@ -29,9 +30,12 @@ def init_dist(backend='nccl', **kwargs):
 
 
 def main():
-
+    parser = argparse.ArgumentParser(description='Process some integers.')
+    parser.add_argument('--opt_file', type=str, default='options/train/train_BDNet.yml', 
+                    help='path for option file')
+    args = parser.parse_args()
     #### options
-    opt = 'options/train/train_BDNet.yml'
+    opt = args.opt_file 
     opt = option.parse(opt, is_train=True)
     log_dir = '../tb_logger/' + opt['name']
     #### distributed training settings

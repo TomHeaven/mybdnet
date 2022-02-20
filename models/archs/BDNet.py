@@ -10,7 +10,7 @@ try:
 except ImportError:
     raise ImportError('Failed to import DCNv2 module.')
             
-DEBUG = True
+DEBUG = False
     
 class Predenoise_Pyramid(nn.Module):
     def __init__(self, nf=64,num_in=4,num_out=64,out_act='lrelu'):
