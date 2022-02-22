@@ -1,5 +1,5 @@
 #### general settings
-name: BDNet_train5
+name: BDNet_train
 use_tb_logger: true
 model: video_base
 # scale: 4 # GS: without scale for denoising

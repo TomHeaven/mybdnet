@@ -217,7 +217,8 @@ class My_real(data.Dataset):
         img_paths = files_grabbed
         rggb_l = []
         noise_l = []
-        sigma = 5 / 255.0
+        #sigma = 5 / 255.0
+        sigma = np.float(int(self.opt['sigma']))/255.0
         for img_path in img_paths:
             if DEBUG:
                 print('img_path', img_path)

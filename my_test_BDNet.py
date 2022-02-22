@@ -84,7 +84,7 @@ def main():
                 out_img = rlt_img
                 #wb = val_data['wb'][0].unsqueeze(0).numpy()
                 #out_img = out_img*wb
-                out_img = (np.clip(out_img,0.0,1.0-1e-4)+1e-4)**(1.0/2.2)
+                #out_img = (np.clip(out_img,0.0,1.0-1e-4)+1e-4)**(1.0/2.2)
                 out_img = np.uint8(out_img*255.0)
                 
                 filename = os.path.basename(folder)

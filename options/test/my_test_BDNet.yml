@@ -11,7 +11,7 @@ is_multi_out: True
 datasets:
   val:
     pre_demosaic: False
-    name: hdr+
+    name: hdr+_crop_sigma5
     mode: My_real #video_denoising_test_finetune #video_denoising_test_SIDD
     dataroot_GT: ../../mf_demosaicking_denoising/data_real/hdr+_crop_sigma5
     cache_data: True
