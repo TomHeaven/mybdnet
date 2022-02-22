@@ -85,9 +85,9 @@ network_G:
 
 #### path  
 path:
-  pretrain_model_G:  #../experiments/BDNet_train/models/80_G.pth
-  strict_load: ~ #True
-  resume_state:  #../experiments/BDNet_train/training_state/80.state
+  pretrain_model_G:  ../experiments/BDNet_train5/models/76_G.pth
+  strict_load: ~ True
+  resume_state:  ../experiments/BDNet_train5/training_state/76.state
 
 #### training settings: learning rate scheme, loss
 train:

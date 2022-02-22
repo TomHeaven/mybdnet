@@ -138,7 +138,7 @@ def main():
     #### training
     logger.info('Start training from epoch: {:d}, iter: {:d}'.format(start_epoch, current_step))
     total_epochs = 90
-    start_epoch = 0
+    #start_epoch = 0
     size_dataset_syn = len(train_loader_syn)
     size_dataset_real = len(train_loader_real)
     size_all = size_dataset_syn if size_dataset_syn >= size_dataset_real else size_dataset_real
