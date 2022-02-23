@@ -2,6 +2,7 @@ import os
 import math
 import random
 import logging,time
+from typing_extensions import runtime
 import data.util as datautil
 import torch
 import torch.distributed as dist
@@ -14,6 +15,7 @@ from models import create_model
 import cv2
 import numpy as np
 import argparse
+import time
 
 DEBUG = False
 
@@ -46,8 +48,9 @@ def main():
     for phase, dataset_opt in opt['datasets'].items():
         if phase.startswith('val'):
             # pdb.set_trace()
+            print('Test: phase', phase)
             if DEBUG:
-                print('Test: phase', phase, 'dataset_opt', dataset_opt)
+                print('dataset_opt', dataset_opt)
             val_set = create_dataset(dataset_opt)
             val_loader = create_dataloader(val_set, dataset_opt, opt, None)
 
@@ -63,11 +66,13 @@ def main():
                 os.makedirs(save_path)
             is_test_gt = opt['is_test_gt']
             
-            #if epoch % 10 == 0:
+            total_time = 0.0
             for idx, val_data in enumerate(val_loader):
                 folder = val_data['folder'][0]
                 model.feed_data(val_data,need_GT=is_test_gt)
+                starttime = time.time()
                 model.test(flag='real')
+                total_time += time.time() - starttime
                 visuals = model.get_current_visuals(need_GT=is_test_gt)
                 lq_img = visuals['LQ'][2,:,:,:].permute(1,2,0).numpy()
                 lq_img = datautil.demosaic(lq_img)
@@ -85,6 +90,7 @@ def main():
                 #wb = val_data['wb'][0].unsqueeze(0).numpy()
                 #out_img = out_img*wb
                 #out_img = (np.clip(out_img,0.0,1.0-1e-4)+1e-4)**(1.0/2.2)
+                out_img = (np.clip(out_img,0.0,1.0-1e-4)+1e-4)
                 out_img = np.uint8(out_img*255.0)
                 
                 filename = os.path.basename(folder)
@@ -100,7 +106,8 @@ def main():
                     ssim = util.calculate_ssim(np.uint8(np.clip(rlt_img,0.0,1.0)*255.0), np.uint8(np.clip(gt_img,0.0,1.0)*255.0))
                     if math.isinf(ssim) == False:
                         ssim_rlt[folder] = ssim
-
+            
+            print('total test time %.3f seconds' % total_time, 'average test time %.3f seconds' % (total_time / len(val_loader)))
                 #pbar.update('Test {}_psnr={}'.format(folder,psnr))
             if is_test_gt == True and len(psnr_rlt) > 0:
                 for k, v in psnr_rlt.items():
